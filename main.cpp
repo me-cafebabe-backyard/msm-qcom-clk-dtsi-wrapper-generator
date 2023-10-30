@@ -12,6 +12,14 @@ msm clock uses lowercase
 qcom clock uses uppercase
 */
 
+#define CLOCK_CONTROLLER_DTS_NODE_WRAPPER \
+	"#ifdef CONFIG_COMMON_CLK_MSM\n" \
+	"#define apsscc clock_cpu\n" \
+	"#define debugcc clock_debug\n" \
+	"#define gcc clock_gcc\n" \
+	"#define rpmcc clock_gcc\n" \
+	"#endif"
+
 enum clk_types {
 	CPU,
 	DSI_PLL,
@@ -166,6 +174,8 @@ int main(int argc, char* argv[])
 	cout << "#ifndef _DTS_MSM8937_CLK_WRAPPER_H" << endl;
 	cout << "#define _DTS_MSM8937_CLK_WRAPPER_H" << endl;
 	cout << endl;
+
+	cout << CLOCK_CONTROLLER_DTS_NODE_WRAPPER << endl << endl;
 
 	while (getline(msmClkDtHeaderFile, line)) {
 		// Only proceed for lines which we're interested in
