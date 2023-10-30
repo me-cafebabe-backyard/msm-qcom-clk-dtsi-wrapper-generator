@@ -12,6 +12,8 @@ msm clock uses lowercase
 qcom clock uses uppercase
 */
 
+#define DEFINE_CLK_WRAPPERS_IN_ONE_IF
+
 #define CLOCK_CONTROLLER_DTS_NODE_WRAPPER \
 	"#ifdef CONFIG_COMMON_CLK_MSM\n" \
 	"#define apsscc clock_cpu\n" \
@@ -177,6 +179,11 @@ int main(int argc, char* argv[])
 
 	cout << CLOCK_CONTROLLER_DTS_NODE_WRAPPER << endl << endl;
 
+#ifdef DEFINE_CLK_WRAPPERS_IN_ONE_IF
+	int i = 0;
+	string bufMsmClks, bufQcomClks;
+#endif
+
 	while (getline(msmClkDtHeaderFile, line)) {
 		// Only proceed for lines which we're interested in
 		if (!comparePrefix(line, "#define "))
@@ -204,8 +211,26 @@ int main(int argc, char* argv[])
 
 		// Generate qcom clock name
 		string qcomClkName;
-		enum clk_types clkType = msmToQcom(&msmClkName, &qcomClkName);
+		enum clk_types clkType [[maybe_unused]] = msmToQcom(&msmClkName, &qcomClkName);
 
+#ifdef DEFINE_CLK_WRAPPERS_IN_ONE_IF
+		// Store clk names to buffer
+		i++;
+		bufMsmClks.append("#define ");
+		bufMsmClks.append(msmClkName);
+		bufMsmClks.append(" ");
+		bufMsmClks.append(qcomClkName);
+		bufMsmClks.append(" // ");
+		bufMsmClks.append(to_string(i));
+		bufMsmClks.append("\n");
+		bufQcomClks.append("#define ");
+		bufQcomClks.append(qcomClkName);
+		bufQcomClks.append(" ");
+		bufQcomClks.append(msmClkName);
+		bufQcomClks.append(" // ");
+		bufQcomClks.append(to_string(i));
+		bufQcomClks.append("\n");
+#else
 		// Output
 		switch (clkType) {
 			case CPU:
@@ -239,7 +264,17 @@ int main(int argc, char* argv[])
 		cout << "#elif !defined(" << qcomClkName << ")" << endl;
 		cout << "#define " << qcomClkName << " " << msmClkName << endl;
 		cout << "#endif" << endl << endl;
+#endif
 	}
+
+#ifdef DEFINE_CLK_WRAPPERS_IN_ONE_IF
+	// Output
+	cout << "#ifdef CONFIG_COMMON_CLK_MSM" << endl;
+	cout << endl << bufQcomClks << endl;
+	cout << "#else // !CONFIG_COMMON_CLK_MSM" << endl;
+	cout << endl << bufMsmClks << endl;
+	cout << "#endif // !CONFIG_COMMON_CLK_MSM" << endl << endl;
+#endif
 
 	cout << "#endif // _DTS_MSM8937_CLK_WRAPPER_H" << endl;
 
