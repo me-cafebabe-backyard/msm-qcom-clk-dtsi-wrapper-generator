@@ -216,20 +216,34 @@ int main(int argc, char* argv[])
 #ifdef DEFINE_CLK_WRAPPERS_IN_ONE_IF
 		// Store clk names to buffer
 		i++;
-		bufMsmClks.append("#define ");
-		bufMsmClks.append(msmClkName);
-		bufMsmClks.append(" ");
-		bufMsmClks.append(qcomClkName);
-		bufMsmClks.append(" // ");
-		bufMsmClks.append(to_string(i));
-		bufMsmClks.append("\n");
-		bufQcomClks.append("#define ");
-		bufQcomClks.append(qcomClkName);
-		bufQcomClks.append(" ");
-		bufQcomClks.append(msmClkName);
-		bufQcomClks.append(" // ");
-		bufQcomClks.append(to_string(i));
-		bufQcomClks.append("\n");
+		if (clkType == DSI_PLL) {
+			// Ignore DSI_PLL type of clocks
+			bufMsmClks.append("// ");
+			bufMsmClks.append(to_string(i));
+			bufMsmClks.append(" ");
+			bufMsmClks.append(msmClkName);
+			bufMsmClks.append("\n");
+			bufQcomClks.append("// ");
+			bufQcomClks.append(to_string(i));
+			bufQcomClks.append(" ");
+			bufQcomClks.append(msmClkName);
+			bufQcomClks.append("\n");
+		} else {
+			bufMsmClks.append("#define ");
+			bufMsmClks.append(msmClkName);
+			bufMsmClks.append(" ");
+			bufMsmClks.append(qcomClkName);
+			bufMsmClks.append(" // ");
+			bufMsmClks.append(to_string(i));
+			bufMsmClks.append("\n");
+			bufQcomClks.append("#define ");
+			bufQcomClks.append(qcomClkName);
+			bufQcomClks.append(" ");
+			bufQcomClks.append(msmClkName);
+			bufQcomClks.append(" // ");
+			bufQcomClks.append(to_string(i));
+			bufQcomClks.append("\n");
+		}
 #else
 		// Output
 		switch (clkType) {
