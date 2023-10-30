@@ -204,7 +204,8 @@ int main(int argc, char* argv[])
 				;;
 			case DSI_PLL:
 				cout << "/* DSI PLL */" << endl;
-				break;
+				cout << "// " << msmClkName << endl << endl;
+				continue;
 				;;
 			case GCC:
 				cout << "/* GCC */" << endl;
