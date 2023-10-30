@@ -97,6 +97,24 @@ enum clk_types msmToQcom(string* msm, string* qcom) {
 	enum clk_types actual_clk_type = GCC;
 	*qcom = *msm;
 
+	// Direct match
+	if (*msm == "clk_a53_bc_clk") {
+		*qcom = "APCS_MUX_C1_CLK";
+		return CPU;
+	} else if (*msm == "clk_a53_lc_clk") {
+		*qcom = "APCS_MUX_C0_CLK";
+		return CPU;
+	} else if (*msm == "clk_cci_clk") {
+		*qcom = "APCS_MUX_CCI_CLK";
+		return CPU;
+	} else if (*msm == "clk_div_clk1_a") {
+		*qcom = "RPM_SMD_DIV_A_CLK1";
+		return RPMCC_SMD;
+	} else if (*msm == "clk_div_clk2_a") {
+		*qcom = "RPM_SMD_DIV_A_CLK2";
+		return RPMCC_SMD;
+	}
+
 	// Remove clk_ prefix
 	qcom->erase(0, 4);
 
@@ -129,13 +147,6 @@ enum clk_types msmToQcom(string* msm, string* qcom) {
 		case RPMCC_SMD:
 			// example: clk_xo_clk_src => RPM_SMD_XO_CLK_SRC
 			qcom->insert(0, "RPM_SMD_");
-
-			// example: clk_div_clk2_a => RPM_SMD_DIV_A_CLK2
-			if (*qcom == "RPM_SMD_DIV_CLK1_A")
-				*qcom = "RPM_SMD_DIV_A_CLK1";
-			else if (*qcom == "RPM_SMD_DIV_CLK2_A")
-				*qcom = "RPM_SMD_DIV_A_CLK2";
-
 			break;
 		default:
 			break;
