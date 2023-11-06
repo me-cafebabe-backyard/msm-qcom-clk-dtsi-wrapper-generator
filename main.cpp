@@ -75,6 +75,16 @@ const clk_prefix_t kClkPrefixs[] = {
 	{CPU, "cci_clk", true},
 
 	// ref: qcom/clk-smd-rpm.c qm215_clks[]
+	{RPMCC_SMD, "bb_clk", false},
+	{RPMCC_SMD, "rf_clk", false},
+	{RPMCC_SMD, "div_", false},
+
+	{RPMCC, "pnoc_", false},
+	{RPMCC, "snoc_", false},
+	{RPMCC, "bimc_", false},
+	{RPMCC, "xo_", false},
+	{RPMCC, "ln_bb_", false}, // Not found on QCOM driver
+
 	{RPMCC_SMD, "xo_clk_src", true},
 	{RPMCC_SMD, "xo_a_clk_src", true},
 	{RPMCC_SMD, "qdss_", false},
@@ -88,18 +98,8 @@ const clk_prefix_t kClkPrefixs[] = {
 	{RPMCC_SMD, "bimc_gpu_a_clk", true},
 	{RPMCC_SMD, "ipa_", false},
 
-	{RPMCC, "sysmmnoc_msmbus_", false},
 	{RPMCC_SMD, "sysmmnoc_", false},
-
-	{RPMCC_SMD, "bb_clk", false},
-	{RPMCC_SMD, "rf_clk", false},
-	{RPMCC_SMD, "div_", false},
-
-	{RPMCC, "pnoc_", false},
-	{RPMCC, "snoc_", false},
-	{RPMCC, "bimc_", false},
-	{RPMCC, "xo_", false},
-	{RPMCC, "ln_bb_", false}, // Not found on QCOM driver
+	{RPMCC, "sysmmnoc_msmbus_", false},
 };
 
 bool comparePrefix(string str, string prefix) {
