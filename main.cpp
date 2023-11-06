@@ -22,6 +22,7 @@ qcom clock uses uppercase
 	"#define apsscc clock_cpu\n" \
 	"#define debugcc clock_debug\n" \
 	"#define gcc clock_gcc\n" \
+	"#define gcc_mdss clock_gcc_mdss\n" \
 	"#define rpmcc clock_gcc\n" \
 	"#endif"
 
